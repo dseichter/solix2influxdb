@@ -1,0 +1,5 @@
+options.json
+__pycache__
+authcache
+test.json
+venv/
