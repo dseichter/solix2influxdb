@@ -2,4 +2,6 @@ options.json
 __pycache__
 authcache
 test.json
+test2.json
 venv/
+.vscode/

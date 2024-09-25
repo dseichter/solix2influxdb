@@ -12,6 +12,10 @@ from paho.mqtt import client as mqtt
 from paho.mqtt import enums
 from urllib.parse import urlparse
 
+from influxdb_client import InfluxDBClient, Point, WriteOptions
+from influxdb_client.client.write_api import SYNCHRONOUS
+from dateutil import parser
+
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 _LOGGER.addHandler(logging.StreamHandler(sys.stdout))
 CONSOLE: logging.Logger = logging.getLogger("console")
@@ -33,6 +37,12 @@ FIRST_RECONNECT_DELAY = 1
 RECONNECT_RATE = 2
 MAX_RECONNECT_COUNT = 12
 MAX_RECONNECT_DELAY = 60
+
+influxdb_token = os.environ.get("INFLUXDB_TOKEN", "no-token")
+influxdb_url = os.environ.get("INFLUXDB_URL", "http://localhost:8086/")
+influxdb_org = os.environ.get("INFLUXDB_ORG", "solar")
+influxdb_bucket = os.environ.get("INFLUXDB_BUCKET", "anker")
+
 
 def print_env():
     print(f"S2M_USER: {S2M_USER}")
@@ -253,18 +263,46 @@ async def fetch_and_publish_sites(solix: api.AnkerSolixApi, client: mqtt.Client,
 
         site_homepage = await solix.get_homepage()
         site_homepage_json = json.dumps( site_homepage )
-        CONSOLE.info(f"Site Homepage: {site_homepage_json}")
-        client.publish(f"{S2M_MQTT_TOPIC}/{site_name}", site_homepage_json)
+        #CONSOLE.info(f"Site Homepage: {site_homepage_json}")
+        res = client.publish(f"{S2M_MQTT_TOPIC}/{site_name}", site_homepage_json)
+        print(res)
 
         scene_info = await solix.get_scene_info(siteId=site_id)
         scene_info_json = json.dumps( scene_info )
-        CONSOLE.info(f"Scene Info: {scene_info_json}")
-        client.publish(f"{S2M_MQTT_TOPIC}/{site_name}/scene_info", scene_info_json)
+        
+        # Direct InfluxDB write
+        point = Point("solix")
 
+        data = scene_info
+        solix_info = data["solarbank_info"]
+        
+
+        point.tag("solarbattery", solix_info["solarbank_list"][0]["device_name"])
+        #point.time(parser.parse(solix_info["updated_time"]))
+        for key, value in solix_info["solarbank_list"][0].items():
+            try:
+                point.field(key, float(value))
+            except ValueError:
+                point.field(key, value)
+                  
+        #with InfluxDBClient.from_config_file("config.toml") as client:
+        print(influxdb_url)
+        with InfluxDBClient(url=influxdb_url, token=influxdb_token, org=influxdb_org) as influxdbclient:
+            with influxdbclient.write_api(write_options=SYNCHRONOUS) as writer:
+                try:
+                    writer.write(bucket=influxdb_bucket, record=[point])
+                except Exception as e:
+                    print(e)
+        
+        #CONSOLE.info(f"Scene Info: {scene_info_json}")
+        res = client.publish(f"{S2M_MQTT_TOPIC}/{site_name}/scene_info", scene_info_json)
+        print(res)
+        
         device_param = await solix.get_device_parm(siteId=site_id)
         device_param_json = json.dumps( device_param )
-        CONSOLE.info(f"Device Param: {device_param_json}")
-        client.publish(f"{S2M_MQTT_TOPIC}/{site_name}/device_param", device_param_json)
+        #CONSOLE.info(f"Device Param: {device_param_json}")
+        res = client.publish(f"{S2M_MQTT_TOPIC}/{site_name}/device_param", device_param_json)
+        print(res)
 
     client.loop_stop()
 
