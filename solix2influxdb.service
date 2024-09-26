@@ -1,0 +1,12 @@
+[Unit]
+Description=Solix2Influxdb
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/solix2influxdb
+ExecStart=/opt/solix2influxdb/solix2influxdb.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

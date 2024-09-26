@@ -21,7 +21,6 @@ S2M_PASSWORD = os.getenv( "S2M_PASSWORD" )
 S2M_COUNTRY = os.getenv( "S2M_COUNTRY" )
 S2M_POLL_INTERVAL = int(os.getenv("S2M_POLL_INTERVAL"))
 
-CLIENT_ID = f'python-mqtt-{random.randint(0, 1000)}'
 FIRST_RECONNECT_DELAY = 1
 RECONNECT_RATE = 2
 MAX_RECONNECT_COUNT = 12
@@ -31,20 +30,6 @@ influxdb_token = os.environ.get("INFLUXDB_TOKEN", "no-token")
 influxdb_url = os.environ.get("INFLUXDB_URL", "http://localhost:8086/")
 influxdb_org = os.environ.get("INFLUXDB_ORG", "solar")
 influxdb_bucket = os.environ.get("INFLUXDB_BUCKET", "anker")
-
-
-def print_env():
-    print(f"S2M_USER: {S2M_USER}")
-    print(f"S2M_PASSWORD: {S2M_PASSWORD}")
-    print(f"S2M_COUNTRY: {S2M_COUNTRY}")
-
-    print(f"S2M_POLL_INTERVAL: {S2M_POLL_INTERVAL}")
-
-    print(f"CLIENT_ID: {CLIENT_ID}")
-    print(f"FIRST_RECONNECT_DELAY: {FIRST_RECONNECT_DELAY}")
-    print(f"RECONNECT_RATE: {RECONNECT_RATE}")
-    print(f"MAX_RECONNECT_COUNT: {MAX_RECONNECT_COUNT}")
-    print(f"MAX_RECONNECT_DELAY: {MAX_RECONNECT_DELAY}")
 
 
 def get_site_id(site_list, site_name):
