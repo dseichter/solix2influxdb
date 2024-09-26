@@ -24,31 +24,16 @@ The add-on can be configured using the following parameters:
 
 **mqtt_topic**: Topic where data will be be published.
 
-## Exposed sensors
+## Installation
 
-For the data retrieved from the Anker endpoint the following sensor entites are generated _per site_ via [MQTT discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery):
+python3 -m venv venv
+source venv/bin/activate
+pip install influxdb_client aiohttp asyncio
 
-| name                                           | unique_id                                       | value type | value source |
-| ---------------------------------------------- | ----------------------------------------------- | ---------- | ------------ |
-| Solarbank E1600 {site_name} Battery Level      | solarbank*e1600*{site_name}\_battery_level      | numeric    | state        |
-| Solarbank E1600 {site_name} Photovoltaic Power | solarbank*e1600*{site_name}\_photovoltaic_power | numeric    | state        |
-| Solarbank E1600 {site_name} Photovoltaic Yield | solarbank*e1600*{site_name}\_photovoltaic_yield | numeric    | state        |
-| Solarbank E1600 {site_name} Output Power       | solarbank*e1600*{site_name}\_output_power       | numeric    | state        |
-| Solarbank E1600 {site_name} Charging Power     | solarbank*e1600*{site_name}\_charging_power     | numeric    | state        |
-| Solarbank E1600 {site_name} Last Update        | solarbank*e1600*{site_name}\_last_update        | numeric    | state        |
-| Solarbank E1600 {site_name} Charging Status    | solarbank*e1600*{site_name}\_charging_status    | numeric    | state        |
-| Solarbank E1600 {site_name} CO2 Savings        | solarbank*e1600*{site_name}\_co2_savings        | numeric    | state        |
-| Solarbank E1600 {site_name} Saved Costs        | solarbank*e1600*{site_name}\_saved_costs        | numeric    | state        |
-| Solarbank E1600 {site_name} Schedule           | solarbank*e1600*{site_name}\_schedule           | JSON       | attribute    |
-| Solarbank E1600 {site_name} Site Homepage      | solarbank*e1600*{site_name}\_site_homepage      | JSON       | attribute    |
+chmod 755 solix2influxdb.sh
+sudo ln -s /opt/solix2influxdb/solix2influxdb.service /etc/systemd/system/solix2influxdb.service
+sudo systemctl daemon-reload
 
-## Troubleshooting
-
-In order to test the communication it is helpful to use a MQTT client tool like [MQTT Explorer](https://mqtt-explorer.com/) which is also available as an [add-on](https://github.com/home-assistant/addons/tree/master/mosquitto) for Home Assistant.
-
-The underlaying [anker-splix-api](https://github.com/thomluther/anker-solix-api/tree/main) library polls the data from the Anker API and publishes the result as JSON message to the specified MQTT topic for each site. If your ` mqtt_topic` is _anker/solix_ and one of your sites is named _Balkonsolar_ you should see a message for the topic `anker/solix/Balkonsolar/scene_info`.
-
-## Aknowledgements
 
 This add on is based on the great work of:
 

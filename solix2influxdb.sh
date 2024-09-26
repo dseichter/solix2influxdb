@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+cd /opt/solix2influxdb
+
 source venv/bin/activate
 
 CONFIG_PATH=options.json
