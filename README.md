@@ -60,3 +60,6 @@ This add on is based on the great work of:
 - [homeassistant-addons](https://github.com/markusmauch/homeassistant-addons)
 - [anker-solix-api](https://github.com/thomluther/anker-solix-api)
 
+# Feedback
+
+You are welcome to provide feedback.
