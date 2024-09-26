@@ -1,46 +1,62 @@
-# Anker Solix Solarbank E1600 to MQTT
+# Anker Solix Solarbank E1600 to InfluxDB
 
-This addon uses the [anker-splix-api](https://github.com/thomluther/anker-solix-api) library to poll the Solix API for the latest sample data and publish it to an MQTT broker.
+This service uses the [anker-solix-api](https://github.com/thomluther/anker-solix-api) library to poll the Solix API for the latest sample data and publish it to an InfluxDB.
 
 ## Prerequisites
 
-You need to have a running [MQTT broker](https://github.com/home-assistant/addons/tree/master/mosquitto) instance.
+You need to have a running [InfluxDB](https://www.influxdata.com/products/influxdb/) instance. On your server, python3 needs to be installed.
 
 ## Configuration
 
-The add-on can be configured using the following parameters:
+Create a file `options.json` and provide the following parameters:
 
-**user**: A Solix API client id.
-
-**password**: The client secret.
-
-**country**: A two-letter country code (e.g. DE).
-
-**mqtt_uri**: The MQTT broker URL, e.g. mqtt://homeassistant.local:1883.
-
-**mqtt_username**: Optional username for MQTT authentication.
-
-**mqtt_password**: Optional password for MQTT authentication.
-
-**mqtt_topic**: Topic where data will be be published.
+```JSON
+{
+    "user": "your anker login name",
+    "password": "your password of the anker app",
+    "country": "country code (e.g. DE)",
+    "poll_interval": 30,
+    "influxdb_token": "<token generated in influxdb>",
+    "influxdb_org": "organisation_name",
+    "influxdb_bucket": "name on a newly created bucket",
+    "influxdb_url": "http://127.0.0.1:8086"
+}
+```
 
 ## Installation
 
+Downdload or clone the repository. Switch to the directory. E.g. /opt/solix2influxdb. 
+
+Run the following commands:
+```sh
 python3 -m venv venv
 source venv/bin/activate
-pip install influxdb_client aiohttp asyncio
+pip install -r src/requirements.txt
+```
 
+After that, adjust the shell script, if it is not placed into /opt/solix2influxdb
+
+Make the script executable
+```sh
 chmod 755 solix2influxdb.sh
+```
+
+If you want to install it as a service, you can run the following (be aware of adjusting the service file if the path is different from /opt/solix2influxdb)
+
+```sh
 sudo ln -s /opt/solix2influxdb/solix2influxdb.service /etc/systemd/system/solix2influxdb.service
 sudo systemctl daemon-reload
+sudo systemctl start solix2influxdb.service
+```
+
+Check, if everything is fine by running
+```sh
+sudo systemctl start solix2influxdb.service
+```
 
 
 This add on is based on the great work of:
 
+- [homeassistant-addons](https://github.com/markusmauch/homeassistant-addons)
 - [anker-solix-api](https://github.com/thomluther/anker-solix-api)
-- [python-eufy-security](https://github.com/FuzzyMistborn/python-eufy-security)
-- [solix2mqtt](https://github.com/tomquist/solix2mqtt)
 
-## Support
-
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/markusmauch)
