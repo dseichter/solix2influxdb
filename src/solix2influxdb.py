@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import os
-import random
 import sys
 import time
 from aiohttp import ClientSession
