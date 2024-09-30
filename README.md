@@ -53,8 +53,27 @@ sudo systemctl start solix2influxdb.service
 
 Check, if everything is fine by running
 ```sh
-sudo systemctl start solix2influxdb.service
+sudo systemctl status solix2influxdb.service
 ```
+
+You should see something like the following
+
+```sh
+● solix2influxdb.service - Solix2Influxdb
+     Loaded: loaded (/etc/systemd/system/solix2influxdb.service; linked; preset: enabled)
+     Active: active (running) since Mon 2024-09-30 19:59:12 UTC; 4s ago
+   Main PID: 82838 (bash)
+      Tasks: 3 (limit: 482)
+     Memory: 37.8M (peak: 38.3M)
+        CPU: 551ms
+     CGroup: /system.slice/solix2influxdb.service
+             ├─82838 bash /opt/solix2influxdb/solix2influxdb.sh
+             └─82847 python3 src/solix2influxdb.py
+
+Sep 30 19:59:12 ip-172-31-214-198 systemd[1]: Started solix2influxdb.service - Solix2Influxdb.
+```
+
+# Credits
 
 This add on is based on the great work of:
 
