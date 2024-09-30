@@ -44,7 +44,7 @@ class NeedVerifyCodeError(AnkerSolixError):
 
 
 class VerifyCodeMaxError(AnkerSolixError):
-    """Maximum attempts of verications error."""
+    """Maximum attempts of verifications error."""
 
 
 class VerifyCodeNoneMatchError(AnkerSolixError):
@@ -75,6 +75,8 @@ ERRORS: dict[int, type[AnkerSolixError]] = {
     401: AuthorizationError,
     403: AuthorizationError,
     429: RequestLimitError,
+    502: ConnectError,
+    504: ConnectError,
     997: ConnectError,
     998: NetworkError,
     999: ServerError,
