@@ -4,7 +4,7 @@ This service uses the [anker-solix-api](https://github.com/thomluther/anker-soli
 
 ## Prerequisites
 
-You need to have a running [InfluxDB](https://www.influxdata.com/products/influxdb/) instance. On your server, python3 needs to be installed.
+You need to have a running [InfluxDB](https://www.influxdata.com/products/influxdb/) instance. On your server, where you want to install solix2influxdb, python3 needs to be installed.
 
 ## Configuration
 
@@ -25,7 +25,9 @@ Create a file `options.json` and provide the following parameters:
 
 ## Installation
 
-Downdload or clone the repository. Switch to the directory. E.g. /opt/solix2influxdb. 
+How to implement it, you can also see my [solarmonitor](https://github.com/dseichter/solarmonitor) projects.
+
+Download or clone the repository. Switch to the directory. E.g. /opt/solix2influxdb. 
 
 Run the following commands:
 ```sh
@@ -53,7 +55,6 @@ Check, if everything is fine by running
 ```sh
 sudo systemctl start solix2influxdb.service
 ```
-
 
 This add on is based on the great work of:
 
